@@ -1,5 +1,9 @@
 package com.sky.context;
 
+/**
+ * 基于ThreadLocal封装工具类，用于保存和获取当前登录用户ID
+ */
+
 public class BaseContext {
 
     public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
