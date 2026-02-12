@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
 
-    <select id="list" resultType="com.sky.dto.EmployeeDTO"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
+    <select id="list" resultType="com.sky.entity.Employee"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
         select employee.* from employee
         <where>
             <if test="name != null and name != ''">
@@ -13,4 +13,18 @@
         order by employee.update_time desc
     </select>
 
+    <update id="update" parameterType="Employee">
+        update employee
+        <set>
+            <if test="username != null and username != ''" >username = #{username},</if>
+            <if test="name != null and name != ''" >name = #{name},</if>
+            <if test="phone != null and phone != ''" >phone = #{phone},</if>
+            <if test="sex != null and sex != ''" >sex = #{sex},</if>
+            <if test="idNumber != null and idNumber != ''" >id_number = #{idNumber},</if>
+            <if test="status != null" >status = #{status},</if>
+            <if test="updateTime != null" >update_time = #{updateTime},</if>
+            <if test="updateUser != null" >update_user = #{updateUser},</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

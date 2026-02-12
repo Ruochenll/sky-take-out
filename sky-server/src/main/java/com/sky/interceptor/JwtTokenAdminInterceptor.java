@@ -2,6 +2,8 @@ package com.sky.interceptor;
 
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.context.BaseContext;
+import com.sky.entity.Employee;
+import com.sky.mapper.EmployeeMapper;
 import com.sky.properties.JwtProperties;
 import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -22,6 +24,8 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private EmployeeMapper employeeMapper;
 
     /**
      * 校验jwt
@@ -51,6 +55,14 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id: {}", empId);
+
+            //检查员工状态
+            Employee employee = employeeMapper.getById(empId);
+            if(employee.getStatus() == 0){
+                response.setStatus(401);
+                return false;
+            }
+
             BaseContext.setCurrentId(empId);    //设置当前线程的id
 
             //3、通过，放行

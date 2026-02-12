@@ -21,6 +21,14 @@ public interface EmployeeMapper {
     Employee getByUsername(String username);
 
     /**
+     * 根据员工id查询员工信息
+     * @param id
+     * @return
+     */
+    @Select("select name, username, password, phone, sex, id_number, status, create_time, update_time, create_user, update_user from employee where id = #{id}")
+    Employee getById(Long id);
+
+    /**
      * 分页查询
      * @param employeePageQueryDTO
      * @return
@@ -34,4 +42,10 @@ public interface EmployeeMapper {
     @Insert("insert into employee (username, name, password, phone, sex, id_number, status, create_time, update_time, create_user, update_user) " +
     "values(#{username}, #{name}, #{password}, #{phone}, #{sex}, #{idNumber}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     void insert(Employee employee);
+
+    /**
+     * 修改员工信息
+     * @return
+     */
+    void update(Employee employee);
 }
