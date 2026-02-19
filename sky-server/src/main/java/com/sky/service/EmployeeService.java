@@ -22,6 +22,7 @@ public interface EmployeeService {
      * @return
      */
     PageResult list(EmployeePageQueryDTO employeePageQueryDTO);
+
     /**
      * 新增员工
      * @param employeeDTO
@@ -35,4 +36,17 @@ public interface EmployeeService {
      * @param id
      */
     void startOrStop(Integer status, Long id);
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    Employee getById(Long id);
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    void updateEmploy(EmployeeDTO employeeDTO);
 }
