@@ -92,9 +92,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .idNumber(employeeDTO.getIdNumber())
                 .build();
 
-        //2.添加创建/修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        //2.添加创建/修改时间
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
 
         //3.设置账号默认状态(启用)
         employee.setStatus(StatusConstant.ENABLE);
@@ -102,9 +102,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         //4.设置默认密码123456
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        //5.设置当前记录创建人和执行人
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        //5.设置当前记录创建人和执行人
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         //6.插入数据
         employeeMapper.insert(employee);
@@ -118,8 +118,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .status(status)
                 .id(id)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         employeeMapper.update(employee);
@@ -148,8 +146,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .phone(employeeDTO.getPhone())
                 .sex(employeeDTO.getSex())
                 .idNumber(employeeDTO.getIdNumber())
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         employeeMapper.update(employee);
