@@ -31,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * 员工登录
      */
+    @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();

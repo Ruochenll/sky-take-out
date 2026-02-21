@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+
+    <select id="dishList" resultType="com.sky.dto.DishDTO"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
+        select dish.* from dish
+        <where>
+            <if test="name != null and name != ''">
+                dish.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and dish.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and dish.status = #{status}
+            </if>
+        </where>
+        order by dish.update_time desc
+    </select>
+
+</mapper>
