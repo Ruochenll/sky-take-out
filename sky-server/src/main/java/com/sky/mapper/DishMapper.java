@@ -1,8 +1,10 @@
 package com.sky.mapper;
 
+import com.sky.annotation.AutoFill;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
+import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -28,4 +30,10 @@ public interface DishMapper {
      * @return
      */
     List<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 修改菜品
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }

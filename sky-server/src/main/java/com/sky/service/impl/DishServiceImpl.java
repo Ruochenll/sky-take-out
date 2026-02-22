@@ -31,5 +31,19 @@ public class DishServiceImpl implements DishService {
         return new PageResult<>(p.getTotal(), p.getResult());
     }
 
+    /**
+     * 起售停售
+     * @param status
+     * @param ids
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
+    }
+
 
 }

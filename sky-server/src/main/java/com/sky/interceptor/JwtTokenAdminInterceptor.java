@@ -54,11 +54,12 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            log.info("当前员工id: {}", empId);
+            log.info("当前请求员工id: {}", empId);
 
             //检查员工状态
             Employee employee = employeeMapper.getById(empId);
             if(employee.getStatus() == 0){
+                log.info("当前请求员工已被禁用...");
                 response.setStatus(401);
                 return false;
             }

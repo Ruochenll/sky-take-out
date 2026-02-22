@@ -19,4 +19,19 @@
         order by dish.update_time desc
     </select>
 
+    <update id="update" parameterType="com.sky.entity.Dish"> <!-- parameterType 是 MyBatis 中用于指定参数类型的配置项  -->
+        update dish
+        <set>
+            <if test="name != null and name != ''" >name = #{name},</if>
+            <if test="image != null and image != ''" >image = #{image},</if>
+            <if test="description != null and description != ''" >description = #{description},</if>
+            <if test="categoryId != null" >category_id = #{categoryId},</if>
+            <if test="price != null and price != ''" >price = #{price},</if>
+            <if test="status != null" >status = #{status},</if>
+            <if test="updateTime != null" >update_time = #{updateTime},</if>
+            <if test="updateUser != null" >update_user = #{updateUser},</if>
+        </set>
+        where id = #{id}
+    </update>
+
 </mapper>

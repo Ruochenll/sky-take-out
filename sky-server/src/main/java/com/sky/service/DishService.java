@@ -12,4 +12,6 @@ public interface DishService {
 
 
     PageResult<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO);
+
+    void startOrStop(Integer status, Long id);
 }
