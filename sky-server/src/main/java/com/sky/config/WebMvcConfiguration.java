@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 配置类，注册web层相关组件
  */
-@Configuration
+@Configuration //表示当前类是一个配置类，替代xml文件
 @Slf4j
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 

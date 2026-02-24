@@ -1,23 +1,34 @@
 package com.sky.utils;
 
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
+import com.aliyun.oss.*;
+import com.aliyun.oss.common.auth.*;
+import com.aliyun.oss.common.auth.CredentialsProviderFactory;
+import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
+import com.aliyun.oss.common.comm.SignVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayInputStream;
+
+/**
+ * 阿里云文件上传工具类
+ */
 
 @Data
 @AllArgsConstructor
 @Slf4j
 public class AliOssUtil {
 
-    private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String bucketName;
+    // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
+    String endpoint;
+    // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
+    EnvironmentVariableCredentialsProvider credentialsProvider;
+    // 填写Bucket名称，例如examplebucket。
+    String bucketName;
+    // 填写Bucket所在地域。以华东1（杭州）为例，Region填写为cn-hangzhou。
+    String region;
+
 
     /**
      * 文件上传
@@ -29,7 +40,15 @@ public class AliOssUtil {
     public String upload(byte[] bytes, String objectName) {
 
         // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        // 当OSSClient实例不再使用时，调用shutdown方法以释放资源。
+        ClientBuilderConfiguration clientBuilderConfiguration = new ClientBuilderConfiguration();
+        clientBuilderConfiguration.setSignatureVersion(SignVersion.V4);
+        OSS ossClient = OSSClientBuilder.create()
+                .endpoint(endpoint)
+                .credentialsProvider(credentialsProvider)
+                .clientConfiguration(clientBuilderConfiguration)
+                .region(region)
+                .build();
 
         try {
             // 创建PutObject请求。

@@ -6,3 +6,8 @@ sky:
     database: sky_take_out
     username: root
     password: 799297206
+
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    bucket-name: ruochen-sky-take-out
+    region: cn-beijing

@@ -47,4 +47,41 @@ public class DishController {
         return Result.success();
     }
 
+    /**
+     * 根据id查询菜品和对应的口味数据
+     * @param ids
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<DishDTO> getByIdWithFlavor(@PathVariable Long id){
+        log.info("根据id查询菜品和对应的口味数据...");
+        DishDTO dishDTO = dishService.getByIdWithFlavor(id);
+        return Result.success(dishDTO);
+    }
+
+    /**
+     * 新增菜品
+     * @param dishDTO
+     * @return
+     */
+    @PostMapping
+    public Result<String> save(@RequestBody DishDTO dishDTO){
+        log.info("新增菜品: {}", dishDTO.getName());
+        dishService.save(dishDTO);
+        return Result.success();
+    }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     * @return
+     */
+    @PutMapping
+    public Result<String> update(@RequestBody DishDTO dishDTO){
+        log.info("修改菜品: {}", dishDTO.getName());
+        dishService.update(dishDTO);
+        return Result.success();
+    }
+
+
 }

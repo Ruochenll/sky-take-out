@@ -130,6 +130,13 @@
             <version>1.4.7</version>
         </dependency>
 
+        <!--阿里云OSS依赖V2-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alibabacloud-oss-v2</artifactId>
+            <version>0.3.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
