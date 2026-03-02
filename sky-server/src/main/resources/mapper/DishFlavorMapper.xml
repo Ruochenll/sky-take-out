@@ -13,8 +13,8 @@
 
     <!-- 批量删除 -->
     <delete id="deleteBatchByDishIds">
-        delete from emp_expr where dish_id in
-        <foreach collection="dishIds" item="id" separator="," open="(" close=")">
+        delete from dish_flavor where dish_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
     </delete>

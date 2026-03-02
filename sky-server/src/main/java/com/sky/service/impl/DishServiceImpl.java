@@ -127,4 +127,17 @@ public class DishServiceImpl implements DishService {
         }
     }
 
+    /**
+     * 批量删除菜品
+     * @param ids
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void delete(Long[] ids) {
+        //批量删除菜品数据
+        dishMapper.deleteBatchByDishIds(ids);
+        //批量删除菜品口味数据
+        dishFlavorMapper.deleteBatchByDishIds(ids);
+    }
+
 }

@@ -62,4 +62,8 @@ public interface DishMapper {
             "values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     void insert(Dish dish);
 
+    /**
+     * 批量删除菜品
+     */
+    void deleteBatchByDishIds(Long[] ids);
 }

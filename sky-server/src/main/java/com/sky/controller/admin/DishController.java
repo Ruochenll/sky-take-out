@@ -83,5 +83,17 @@ public class DishController {
         return Result.success();
     }
 
+    /**
+     * 批量删除菜品
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public Result<String> delete(Long[] ids){
+        log.info("批量删除菜品: {}", (Object) ids);
+        dishService.delete(ids);
+        return Result.success();
+    }
+
 
 }

@@ -26,7 +26,7 @@ public interface DishFlavorMapper {
     /**
      批量删除多个菜品的口味（备用）
     */
-    void deleteBatchByDishIds(Long[] dishIds);
+    void deleteBatchByDishIds(Long[] ids);
 
 
 }
