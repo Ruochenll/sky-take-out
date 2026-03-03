@@ -3,9 +3,9 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: dev                      #指定当前环境
   main:
-    allow-circular-references: true
+    allow-circular-references: true  #解决循环依赖
   datasource:
     druid:
       driver-class-name: ${sky.datasource.driver-class-name}
@@ -18,7 +18,12 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB      # 单个文件最大大小
-      max-request-size: 10MB   # 整个请求最大大小
+      max-request-size: 10MB   # 整个请求最大大小\
+  redis:                       # redis配置
+    host: ${sky.redis.host}
+    port: ${sky.redis.port}
+    password: ${sky.redis.password}
+    database: ${sky.redis.database}
 
 mybatis:
   #mapper配置文件
