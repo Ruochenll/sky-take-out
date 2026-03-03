@@ -66,4 +66,10 @@ public interface DishMapper {
      * 批量删除菜品
      */
     void deleteBatchByDishIds(Long[] ids);
+
+    /**
+     * 根据分类id查询菜品数据
+     */
+    @Select("select name, price, status from dish where category_id = #{categoryId}")
+    List<DishDTO> list(Integer categoryId);
 }

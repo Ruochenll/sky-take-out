@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 菜品管理
  */
@@ -93,6 +95,16 @@ public class DishController {
         log.info("批量删除菜品: {}", (Object) ids);
         dishService.delete(ids);
         return Result.success();
+    }
+
+    /**
+     * 根据分类id查询菜品数据
+     */
+    @GetMapping("/list")
+    public Result<List<DishDTO>> list(Integer categoryId) {
+        log.info("根据分类id查询菜品数据: {}", categoryId);
+        List<DishDTO> list = dishService.list(categoryId);
+        return Result.success(list);
     }
 
 
