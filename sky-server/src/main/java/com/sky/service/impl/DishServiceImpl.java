@@ -27,6 +27,11 @@ public class DishServiceImpl implements DishService {
     DishFlavorMapper dishFlavorMapper;
 
 
+    /**
+     * 菜品分页查询
+     * @param dishPageQueryDTO
+     * @return
+     */
     @Override
     public PageResult<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO){
         //设置分页参数
