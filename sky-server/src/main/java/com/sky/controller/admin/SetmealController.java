@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/setmeal")
 @Slf4j
@@ -61,6 +63,29 @@ public class SetmealController {
         log.info("修改套餐: {}", setmealDTO.getName());
 
         setmealService.update(setmealDTO);
+        return Result.success();
+    }
+
+    /**
+     * 套餐启售/停售
+     */
+    @PostMapping("/status/{status}")
+    public Result<String> startOrStop(@PathVariable Integer status, Long id){
+        log.info("修改套餐状态为: {}", status == 1 ? "启售" : "停售");
+
+        setmealService.startOrStop(status, id);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除套餐
+     */
+    @DeleteMapping
+    public Result<String> delete(Long[] ids){
+        log.info("删除套餐....");
+
+        setmealService.delete(ids);
         return Result.success();
     }
 }

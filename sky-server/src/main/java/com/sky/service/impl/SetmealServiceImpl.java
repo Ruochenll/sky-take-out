@@ -38,7 +38,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void save(SetmealDTO setmealDTO) {
-
+        //创建套餐对象
         Setmeal setmeal = Setmeal.builder()
                 .name(setmealDTO.getName())
                 .categoryId(setmealDTO.getCategoryId())
@@ -117,5 +117,30 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.insertBatch(setmealDishes);
         }
     }
+
+    /**
+     * 套餐启售/停售
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Setmeal setmeal = Setmeal.builder()
+                .id(id)
+                .status(status)
+                .build();
+        setmealMapper.update(setmeal);
+    }
+
+    /**
+     * 删除套餐
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void delete(Long[] ids) {
+        //批量删除菜品数据
+        setmealMapper.deleteByIds(ids);
+        //批量删除菜品对应的口味数据
+        setmealDishMapper.deleteByIds(ids);
+    }
+
 
 }
