@@ -5,6 +5,7 @@ import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -41,7 +42,7 @@ public interface SetmealMapper {
      * @param setmealPageQueryDTO
      * @return
      */
-    List<Setmeal> pageList(SetmealPageQueryDTO setmealPageQueryDTO);
+    List<SetmealVO> pageList(SetmealPageQueryDTO setmealPageQueryDTO);
 
     /**
      * 根据id查询套餐数据

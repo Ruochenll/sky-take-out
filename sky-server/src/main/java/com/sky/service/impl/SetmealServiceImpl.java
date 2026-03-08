@@ -12,6 +12,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,17 +63,17 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public PageResult<Setmeal> pageList(SetmealPageQueryDTO setmealPageQueryDTO) {
+    public PageResult<SetmealVO> pageList(SetmealPageQueryDTO setmealPageQueryDTO) {
         //设置分页参数
         PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
 
-        List<Setmeal> list = setmealMapper.pageList(setmealPageQueryDTO);
+        List<SetmealVO> list = setmealMapper.pageList(setmealPageQueryDTO);
         //传入套餐名称
         if (list != null){
-            list.forEach(setmeal -> setmeal.setCategoryName(categoryMapper.getById(setmeal.getCategoryId())));
+            list.forEach(setmealVO -> setmealVO.setCategoryName(categoryMapper.getById(setmealVO.getCategoryId())));
         }
 
-        Page<Setmeal> pageList = (Page<Setmeal>) list;
+        Page<SetmealVO> pageList = (Page<SetmealVO>) list;
 
         return new PageResult<>(pageList.getTotal(), pageList.getResult());
     }

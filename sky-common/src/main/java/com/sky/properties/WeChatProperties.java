@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component  // 将配置属性类加入Spring容器
 @ConfigurationProperties(prefix = "sky.wechat")
 @Data
+/**
+ * 微信配置属性
+ */
 public class WeChatProperties {
 
     private String appid; //小程序的appid

@@ -6,6 +6,7 @@ import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
+import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +37,10 @@ public class SetmealController {
      * 分页查询
      */
     @GetMapping("/page")
-    public Result<PageResult<Setmeal>> pageList(SetmealPageQueryDTO setmealPageQueryDTO){
+    public Result<PageResult<SetmealVO>> pageList(SetmealPageQueryDTO setmealPageQueryDTO){
         log.info("套餐分页查询...");
 
-        PageResult<Setmeal> list = setmealService.pageList(setmealPageQueryDTO);
+        PageResult<SetmealVO> list = setmealService.pageList(setmealPageQueryDTO);
 
         return Result.success(list);
     }
