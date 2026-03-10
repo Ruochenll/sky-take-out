@@ -6,6 +6,8 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -71,5 +73,7 @@ public interface DishMapper {
      * 根据分类id查询菜品数据
      */
     @Select("select * from dish where category_id = #{categoryId}")
-    List<DishDTO> list(Integer categoryId);
+    List<DishVO> list(Integer categoryId);
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> listWithFlavor(Integer categoryId);
 }

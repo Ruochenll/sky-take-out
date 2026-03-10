@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.entity.SetmealDish;
+import com.sky.vo.DishItemVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -34,4 +35,11 @@ public interface SetmealDishMapper {
      * 批量删除套餐和菜品的关联关系
      */
     void deleteByIds(Long[] ids);
+
+
+    /**
+     * 根据套餐id查询菜品信息与份数
+     */
+    List<DishItemVO> getDishById(Long id);
+
 }

@@ -8,10 +8,12 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.mapper.CategoryMapper;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +81,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     /**
-     * 根据id套餐详情查询
+     * 根据id查询套餐详情
      */
     @Override
     public SetmealDTO getById(Long id) {
@@ -89,6 +91,16 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDTO.setSetmealDishes(setmealDishes);
 
         return setmealDTO;
+    }
+
+
+    /**
+     * 根据id查询套餐菜品信息
+     */
+    @Override
+    public List<DishItemVO> getDishById(Long id) {
+
+        return setmealDishMapper.getDishById(id);
     }
 
     /**
@@ -141,6 +153,15 @@ public class SetmealServiceImpl implements SetmealService {
         setmealMapper.deleteByIds(ids);
         //批量删除菜品对应的口味数据
         setmealDishMapper.deleteByIds(ids);
+    }
+
+    /**
+     * 根据分类id查询套餐
+     */
+    @Override
+    public List<Setmeal> getByCategoryId(Long categoryId) {
+        List<Setmeal> list = setmealMapper.getByCategoryId(categoryId);
+        return list;
     }
 
 

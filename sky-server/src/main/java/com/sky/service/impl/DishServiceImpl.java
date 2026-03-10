@@ -8,14 +8,21 @@ import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -47,7 +54,7 @@ public class DishServiceImpl implements DishService {
     /**
      * 起售停售
      * @param status
-     * @param ids
+     * @param id
      */
     @Override
     public void startOrStop(Integer status, Long id) {
@@ -151,9 +158,69 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public List<DishDTO> list(Integer categoryId) {
-        List<DishDTO> list = dishMapper.list(categoryId);
-        return list;
+    public List<DishVO> list(Integer categoryId) {
+
+        return dishMapper.list(categoryId);
+    }
+
+    /**
+     * 根据分类id查询菜品数据以及口味数据
+     * @param categoryId
+     * @return
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public List<DishVO> listWithFlavor(Integer categoryId) {
+        /**
+         * ---------------时间复杂度更高的原始方法--------------
+         *
+         * List<Dish> dishList = dishMapper.list(dish);
+         *
+         * List<DishVO> dishVOList = new ArrayList<>();
+         *
+         * for (Dish d : dishList) {
+         *      DishVO dishVO = new DishVO();
+         *      BeanUtils.copyProperties(d,dishVO);
+         *
+         *       //根据菜品id查询对应的口味
+         *       List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
+         *
+         *       dishVO.setFlavors(flavors);
+         *       dishVOList.add(dishVO);
+         *       }
+         *
+         *    return dishVOList;
+         * }
+         */
+
+        //------------------时间复杂度低的方法------------------//
+        List<Dish> dishList = dishMapper.listWithFlavor(categoryId);
+
+        // 2. 一次性查询所有菜品的口味（避免 N+1 问题）
+        List<Long> dishIds = dishList.stream()
+                .map(Dish::getId)
+                .collect(Collectors.toList());
+
+        List<DishFlavor> allFlavors = dishFlavorMapper.getByDishIds(dishIds);
+
+        // 3. 将口味按菜品 ID 分组
+        Map<Long, List<DishFlavor>> flavorMap = allFlavors.stream()
+                .collect(Collectors.groupingBy(DishFlavor::getDishId));
+
+        // 4. 构建结果
+        List<DishVO> dishVOList = new ArrayList<>();
+        for (Dish dish : dishList) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(dish, dishVO);
+
+            // 从 Map 中获取该菜品的口味
+            List<DishFlavor> flavors = flavorMap.getOrDefault(dish.getId(), new ArrayList<>());
+            dishVO.setFlavors(flavors);
+
+            dishVOList.add(dishVO);
+        }
+
+        return dishVOList;
     }
 
 }

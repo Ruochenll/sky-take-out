@@ -4,6 +4,7 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.result.PageResult;
+import com.sky.vo.DishVO;
 
 import java.util.List;
 
@@ -25,5 +26,7 @@ public interface DishService {
 
     void delete(Long[] ids);
 
-    List<DishDTO> list(Integer categoryId);
+    List<DishVO> listWithFlavor(Integer categoryId);
+
+    List<DishVO> list(Integer categoryId);
 }
