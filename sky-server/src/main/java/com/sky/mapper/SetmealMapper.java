@@ -69,6 +69,6 @@ public interface SetmealMapper {
      * 根据分类id查询套餐
      * @return
      */
-    @Select("select * from setmeal where category_id = #{categoryId}")
+    @Select("select * from setmeal where category_id = #{categoryId} and status = 1")
     List<Setmeal> getByCategoryId(Long categoryId);
 }

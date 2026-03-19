@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
 
-    <select id="dishList" resultType="com.sky.dto.DishDTO"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
-        select dish.* from dish
+    <select id="dishList" resultType="com.sky.vo.DishVO"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
+        select dish.*, category.name as category_name from dish left join category on dish.category_id = category.id
         <where>
             <if test="name != null and name != ''">
                 dish.name like concat('%',#{name},'%')

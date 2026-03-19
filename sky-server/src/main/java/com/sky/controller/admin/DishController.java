@@ -9,9 +9,16 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜品管理
@@ -23,15 +30,18 @@ public class DishController {
 
     @Autowired
     DishService dishService;
+    @Autowired
+    RedisTemplate redisTemplate;
+
     /**
      * 菜品分页查询
      * @param dishPageQueryDTO
      * @return
      */
     @GetMapping("/page")
-    public Result<PageResult<DishDTO>> dishList(DishPageQueryDTO dishPageQueryDTO){
+    public Result<PageResult<DishVO>> dishList(DishPageQueryDTO dishPageQueryDTO){
         log.info("菜品分页查询");
-        PageResult<DishDTO> pageResult = dishService.dishList(dishPageQueryDTO);
+        PageResult<DishVO> pageResult = dishService.dishList(dishPageQueryDTO);
 
         return Result.success(pageResult);
     }
@@ -46,7 +56,10 @@ public class DishController {
     public Result startOrStop(@PathVariable Integer status, Long id){
         log.info("菜品起售停售");
 
-        dishService.startOrStop(status,id);
+        Long categroyId = dishService.startOrStop(status,id);
+        //清理缓存
+        cleanCache("dish_"+categroyId);
+
         return Result.success();
     }
 
@@ -82,6 +95,9 @@ public class DishController {
     public Result<String> update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品: {}", dishDTO.getName());
         dishService.update(dishDTO);
+        //清理缓存
+        cleanCache("dish_*");
+
         return Result.success();
     }
 
@@ -94,6 +110,9 @@ public class DishController {
     public Result<String> delete(Long[] ids){
         log.info("批量删除菜品: {}", (Object) ids);
         dishService.delete(ids);
+        //清理缓存
+        cleanCache("dish_*");
+
         return Result.success();
     }
 
@@ -107,5 +126,31 @@ public class DishController {
         return Result.success(list);
     }
 
+
+    /**
+     * 清理缓存
+     * @param pattern
+     */
+    @SuppressWarnings("unchecked")
+    private void cleanCache(String pattern){
+        Set<String> keys = (Set<String>) redisTemplate.execute((RedisCallback<Object>) connection -> {
+            Set<String> result = new HashSet<>();
+            try (Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions()
+                    .match(pattern)
+                    .count(1000)
+                    .build())) {
+
+                while (cursor.hasNext()) {
+                    result.add(new String(cursor.next()));
+                }
+            }
+            return result;
+        });
+
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+            log.info("清理缓存: {}", keys);
+        }
+    }
 
 }

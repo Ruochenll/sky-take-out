@@ -40,13 +40,13 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public PageResult<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO){
+    public PageResult<DishVO> dishList(DishPageQueryDTO dishPageQueryDTO){
         //设置分页参数
         PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         //执行查询
-        List<DishDTO> page = dishMapper.dishList(dishPageQueryDTO);
+        List<DishVO> page = dishMapper.dishList(dishPageQueryDTO);
         //封装结果并返回
-        Page<DishDTO> p = (Page<DishDTO>) page;
+        Page<DishVO> p = (Page<DishVO>) page;
 
         return new PageResult<>(p.getTotal(), p.getResult());
     }
@@ -56,13 +56,16 @@ public class DishServiceImpl implements DishService {
      * @param status
      * @param id
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void startOrStop(Integer status, Long id) {
+    public Long startOrStop(Integer status, Long id) {
         Dish dish = Dish.builder()
                 .id(id)
                 .status(status)
                 .build();
         dishMapper.update(dish);
+
+        return dishMapper.getDishById(id).getCategoryId();
     }
 
     /**
@@ -196,6 +199,10 @@ public class DishServiceImpl implements DishService {
         //------------------时间复杂度低的方法------------------//
         List<Dish> dishList = dishMapper.listWithFlavor(categoryId);
 
+        if(dishList == null || dishList.isEmpty()){
+            return new ArrayList<>();
+        }
+
         // 2. 一次性查询所有菜品的口味（避免 N+1 问题）
         List<Long> dishIds = dishList.stream()
                 .map(Dish::getId)
@@ -214,7 +221,7 @@ public class DishServiceImpl implements DishService {
             BeanUtils.copyProperties(dish, dishVO);
 
             // 从 Map 中获取该菜品的口味
-            List<DishFlavor> flavors = flavorMap.getOrDefault(dish.getId(), new ArrayList<>());
+            List<DishFlavor> flavors = flavorMap.getOrDefault(dish.getId(), new ArrayList<>()); //获取该菜品的口味，如果没有则返回一个空列表
             dishVO.setFlavors(flavors);
 
             dishVOList.add(dishVO);

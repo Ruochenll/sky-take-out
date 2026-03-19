@@ -14,9 +14,9 @@ import java.util.List;
 public interface DishService {
 
 
-    PageResult<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO);
+    PageResult<DishVO> dishList(DishPageQueryDTO dishPageQueryDTO);
 
-    void startOrStop(Integer status, Long id);
+    Long startOrStop(Integer status, Long id);
 
     DishDTO getByIdWithFlavor(Long id);
 

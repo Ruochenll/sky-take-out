@@ -34,7 +34,7 @@ public interface DishMapper {
      * @param dishPageQueryDTO
      * @return
      */
-    List<DishDTO> dishList(DishPageQueryDTO dishPageQueryDTO);
+    List<DishVO> dishList(DishPageQueryDTO dishPageQueryDTO);
 
     /**
      * 修改菜品
@@ -74,6 +74,6 @@ public interface DishMapper {
      */
     @Select("select * from dish where category_id = #{categoryId}")
     List<DishVO> list(Integer categoryId);
-    @Select("select * from dish where category_id = #{categoryId}")
+    @Select("select * from dish where category_id = #{categoryId} and status = 1")
     List<Dish> listWithFlavor(Integer categoryId);
 }
