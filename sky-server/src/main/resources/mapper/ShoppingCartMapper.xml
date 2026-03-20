@@ -1,0 +1,35 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.ShoppingCartMapper">
+
+    <update id="update" parameterType="ShoppingCart">
+        update shopping_cart
+        <set>
+            <if test="number != null" >number = #{number},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByDishIdAndUserIdAndDishFlavor" resultType="ShoppingCart">
+        select * from shopping_cart
+        where dish_id = #{dishId} and user_id = #{userId}
+        <if test="dishFlavor != null">
+            and dish_flavor = #{dishFlavor}
+        </if>
+        <if test="dishFlavor == null">
+            and dish_flavor is null
+        </if>
+    </select>
+
+    <delete id="deleteByDishIdAndUserIdAndDishFlavor" parameterType="ShoppingCart">
+        delete from shopping_cart
+        where dish_id = #{dishId} and user_id = #{userId}
+        <if test="dishFlavor != null">
+            and dish_flavor = #{dishFlavor}
+        </if>
+        <if test="dishFlavor == null">
+            and dish_flavor is null
+        </if>
+    </delete>
+
+</mapper>

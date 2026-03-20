@@ -160,8 +160,7 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public List<Setmeal> getByCategoryId(Long categoryId) {
-        List<Setmeal> list = setmealMapper.getByCategoryId(categoryId);
-        return list;
+        return setmealMapper.getByCategoryId(categoryId);
     }
 
 

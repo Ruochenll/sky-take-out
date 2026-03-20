@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtTokenUserInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtProperties jwtProperties;
-    @Autowired
-    private EmployeeMapper employeeMapper;
 
     /**
      * 校验jwt
