@@ -70,6 +70,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * 删除购物车一个菜品
      * @param shoppingCartDTO
      */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void remove(ShoppingCartDTO shoppingCartDTO){
         if(shoppingCartDTO.getDishId() != null){
