@@ -1,20 +1,21 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersConfirmDTO;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
-import com.sky.entity.AddressBook;
-import com.sky.entity.OrderDetail;
-import com.sky.entity.Orders;
-import com.sky.entity.ShoppingCart;
+import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.vo.DishVO;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
@@ -26,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -144,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
         //修改订单状态为待接单
         orderMapper.update(orders);
 
-        //模拟数据
+        //模拟返回数据
         OrderPaymentVO orderPaymentVO = OrderPaymentVO.builder()
                 .nonceStr("123")
                 .paySign("123")
@@ -155,4 +158,55 @@ public class OrderServiceImpl implements OrderService {
 
         return orderPaymentVO;
     }
+
+
+    /**
+     * 历史订单查询
+     */
+    @Override
+    public PageResult<OrderVO> historyOrders(DishPageQueryDTO dishPageQueryDTO) {
+        //设置分页参数
+        PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
+        //执行查询
+        List<OrderVO> page = orderMapper.list(dishPageQueryDTO);
+
+        List<OrderVO> result = listWithOrderDetail(page);
+
+        Page<OrderVO> pageInfo = (Page<OrderVO>) page;
+
+        return new PageResult<>(pageInfo.getTotal(), result);
+    }
+
+    public List<OrderVO> listWithOrderDetail(List<OrderVO> page) {
+        if(page == null || page.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        // 2. 一次性查询所有订单的明细（避免 N+1 问题）
+        List<Long> orderIds = page.stream()
+                .map(OrderVO::getId)
+                .collect(Collectors.toList());
+
+        List<OrderDetail> allOrderDetails = orderDetailMapper.listByOrderIds(orderIds);
+
+        // 3. 将订单明细按订单 ID 分组
+        Map<Long, List<OrderDetail>> orderDetailMap = allOrderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getOrderId));
+
+        // 4. 构建结果
+        List<OrderVO> orderVOList = new ArrayList<>();
+        for (OrderVO order : page) {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order, orderVO);
+
+            // 从 Map 中获取该订单的明细
+            List<OrderDetail> orderDetails = orderDetailMap.getOrDefault(order.getId(), new ArrayList<>());
+            orderVO.setOrderDetailList(orderDetails);
+
+            orderVOList.add(orderVO);
+        }
+
+        return orderVOList;
+    }
+
 }

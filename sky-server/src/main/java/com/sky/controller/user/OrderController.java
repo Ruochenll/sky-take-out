@@ -1,7 +1,9 @@
 package com.sky.controller.user;
 
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
@@ -55,6 +57,16 @@ public class OrderController {
         OrderVO orderVO = orderService.orderDetail(id);
 
         return Result.success(orderVO);
+    }
+
+    /**
+     * 历史订单查询
+     */
+    @GetMapping("/historyOrders")
+    public Result<PageResult<OrderVO>> historyOrders(DishPageQueryDTO dishPageQueryDTO){
+        log.info("历史订单查询：{} ", dishPageQueryDTO);
+
+        return Result.success(orderService.historyOrders(dishPageQueryDTO));
     }
 
 

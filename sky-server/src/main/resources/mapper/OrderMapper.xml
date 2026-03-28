@@ -31,5 +31,15 @@
         where id = #{id}
     </update>
 
+    <select id="list" resultType="com.sky.vo.OrderVO"> <!-- resultType 是 MyBatis 中用于指定查询结果映射类型的配置项  -->
+        select orders.* from orders
+        <where>
+            <if test="status != null">
+                orders.status = #{status}
+            </if>
+        </where>
+        order by orders.order_time desc
+    </select>
+
 </mapper>
 

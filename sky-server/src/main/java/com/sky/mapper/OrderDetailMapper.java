@@ -11,4 +11,6 @@ public interface OrderDetailMapper {
     void insertBatch(List<OrderDetail> cartList);
 
     List<OrderDetail> listByOrderId(Long id);
+
+    List<OrderDetail> listByOrderIds(List<Long> orderIds);
 }

@@ -14,5 +14,12 @@
         select * from order_detail where order_id = #{id}
     </select>
 
+    <select id="listByOrderIds" resultType="com.sky.entity.OrderDetail">
+        select * from order_detail where order_id in
+        <foreach item="item" collection="list" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>
 
